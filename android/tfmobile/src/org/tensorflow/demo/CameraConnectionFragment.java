@@ -117,6 +117,7 @@ public class CameraConnectionFragment extends Fragment {
             };
     private TextView resultsView;
     private ImageView icon;
+    private String previousFlower;
 
     /**
      * Callback for Activities to use to initialize their data once the
@@ -315,6 +316,8 @@ public class CameraConnectionFragment extends Fragment {
             LOGGER.e("Couldn't find any suitable preview size");
             return choices[0];
         }
+
+
     }
 
     public static CameraConnectionFragment newInstance(
@@ -374,14 +377,17 @@ public class CameraConnectionFragment extends Fragment {
             return;
         }
 
+        previousFlower = "";
+
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 DecimalFormat decimalFormat = new DecimalFormat("0.000");
                 Float confidence = results.get(0).getConfidence() * 100;
                 FlowerClass title = FlowerClass.getValue(results.get(0).getTitle());
+                previousFlower = title.name();
                 resultsView.setText(results.get(0).getTitle() + "\n" + decimalFormat.format(confidence) + " %");
-                Log.d("DevLogger", "run: " + results.get(0).getTitle() );
+                Log.d("DevLogger", "run: " + results.get(0).getTitle() +" " +results.size());
                 switch (title) {
                     case DAISY:
                         icon.setImageDrawable(getActivity().getDrawable(R.drawable.daisy));
