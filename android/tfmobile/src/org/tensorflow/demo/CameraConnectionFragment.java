@@ -401,6 +401,7 @@ public class CameraConnectionFragment extends Fragment {
                     case OTHER:
                         icon.setImageDrawable(getActivity().getDrawable(R.drawable.other));
                         break;
+
                 }
             }
         });
@@ -412,7 +413,7 @@ public class CameraConnectionFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        icon.setImageDrawable(getActivity().getDrawable(R.drawable.search));
         startBackgroundThread();
 
         // When the screen is turned off and turned back on, the SurfaceTexture is already
