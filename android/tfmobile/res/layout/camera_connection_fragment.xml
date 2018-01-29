@@ -15,19 +15,50 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <org.tensorflow.demo.AutoFitTextureView
         android:id="@+id/texture"
-        android:layout_width="wrap_content"
+        android:layout_below="@id/layout_results"
+         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
 
-    <org.tensorflow.demo.RecognitionScoreView
-        android:id="@+id/results"
+
+    <LinearLayout
+        android:id="@+id/layout_results"
         android:layout_width="match_parent"
-        android:layout_height="112dp"
-        android:layout_alignParentTop="true" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp">
+
+
+        <ImageView
+            android:id="@+id/icon"
+            tools:src="@drawable/search"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitXY"
+            android:layout_marginRight="20dp"
+            android:elevation="100dp"
+            />
+
+        <TextView
+            android:layout_marginLeft="20dp"
+            android:text="Find a Flower"
+            android:textStyle="bold|italic"
+            android:id="@+id/confidence"
+            android:fontFamily=""
+            android:textAlignment="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24dp" />
+    </LinearLayout>
+
 
     <org.tensorflow.demo.OverlayView
         android:id="@+id/debug_overlay"

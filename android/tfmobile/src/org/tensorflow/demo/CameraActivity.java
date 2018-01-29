@@ -46,6 +46,7 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
 
   private Handler handler;
   private HandlerThread handlerThread;
+  public CameraConnectionFragment mFragment;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -151,7 +152,7 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
   }
 
   protected void setFragment() {
-    final Fragment fragment =
+    mFragment =
         CameraConnectionFragment.newInstance(
             new CameraConnectionFragment.ConnectionCallback() {
               @Override
@@ -165,7 +166,7 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
 
     getFragmentManager()
         .beginTransaction()
-        .replace(R.id.container, fragment)
+        .replace(R.id.container, mFragment)
         .commit();
   }
 

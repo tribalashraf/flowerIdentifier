@@ -71,7 +71,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
   private static final int IMAGE_MEAN = 128;
   private static final float IMAGE_STD = 128.0f;
   private static final String INPUT_NAME = "input";
-  private static final String OUTPUT_NAME = "MobilenetV1/Predictions/Softmax";
+  private static final String OUTPUT_NAME = "final_result";
 
   private static final String MODEL_FILE = "file:///android_asset/graph.pb";
   private static final String LABEL_FILE = "file:///android_asset/labels.txt";
@@ -100,7 +100,6 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
   private Matrix frameToCropTransform;
   private Matrix cropToFrameTransform;
 
-  private ResultsView resultsView;
 
   private BorderedText borderedText;
 
@@ -126,6 +125,8 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
     borderedText = new BorderedText(textSizePx);
     borderedText.setTypeface(Typeface.MONOSPACE);
 
+
+
     classifier =
         TensorFlowImageClassifier.create(
             getAssets(),
@@ -137,7 +138,7 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
             INPUT_NAME,
             OUTPUT_NAME);
 
-    resultsView = (ResultsView) findViewById(R.id.results);
+
     previewWidth = size.getWidth();
     previewHeight = size.getHeight();
 
@@ -237,8 +238,10 @@ public class ClassifierActivity extends CameraActivity implements OnImageAvailab
             lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
 
             cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
-            resultsView.setResults(results);
-            requestRender();
+            if (!results.isEmpty()) {
+              mFragment.updateResults(results);
+              requestRender();
+            }
             computing = false;
           }
         });
