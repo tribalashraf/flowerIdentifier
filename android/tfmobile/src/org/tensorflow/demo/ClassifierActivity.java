@@ -29,6 +29,7 @@ import android.media.ImageReader.OnImageAvailableListener;
 import android.os.SystemClock;
 import android.os.Trace;
 import android.util.Size;
+import android.util.TimeUtils;
 import android.util.TypedValue;
 import android.view.Display;
 import java.util.List;

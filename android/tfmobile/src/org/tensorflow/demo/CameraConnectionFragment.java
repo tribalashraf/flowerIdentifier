@@ -16,6 +16,7 @@
 
 package org.tensorflow.demo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,6 +24,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
@@ -117,6 +119,7 @@ public class CameraConnectionFragment extends Fragment {
             };
     private TextView resultsView;
     private ImageView icon;
+    private String previousFlower;
 
     /**
      * Callback for Activities to use to initialize their data once the
@@ -370,18 +373,29 @@ public class CameraConnectionFragment extends Fragment {
     }
 
     public void updateResults(final List<Classifier.Recognition> results) {
+
+
         if (results.isEmpty()) {
             return;
         }
 
+
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 DecimalFormat decimalFormat = new DecimalFormat("0.000");
                 Float confidence = results.get(0).getConfidence() * 100;
                 FlowerClass title = FlowerClass.getValue(results.get(0).getTitle());
-                resultsView.setText(results.get(0).getTitle() + "\n" + decimalFormat.format(confidence) + " %");
-                Log.d("DevLogger", "run: " + results.get(0).getTitle() );
+                String confScore = decimalFormat.format(confidence);
+
+                Log.d("DevLogger", "run: " + results.get(0).getTitle() + " " + confScore);
+                if (null != previousFlower && !previousFlower.equals(title.name())) {
+                    previousFlower = title.name();
+                    return;
+                }
+                resultsView.setText("    " + results.get(0).getTitle() + "\n" + confScore + " %");
+
                 switch (title) {
                     case DAISY:
                         icon.setImageDrawable(getActivity().getDrawable(R.drawable.daisy));
@@ -407,7 +421,6 @@ public class CameraConnectionFragment extends Fragment {
         });
 
     }
-
 
 
     @Override
@@ -514,12 +527,26 @@ public class CameraConnectionFragment extends Fragment {
             if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
+            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    Activity#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for Activity#requestPermissions for more details.
+                return;
+            }
             manager.openCamera(cameraId, stateCallback, backgroundHandler);
         } catch (final CameraAccessException e) {
             LOGGER.e(e, "Exception!");
         } catch (final InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to lock camera opening.", e);
         }
+    }
+
+    private int checkSelfPermission(String camera) {
+        return 0;
     }
 
     /**
